@@ -1,3 +1,9 @@
+import DiaryEditor from '../components/DiaryEditor';
+
 export default function DiaryPage() {
-  return <div>DiaryPage</div>;
+  return (
+    <div className="max-w-xl mx-auto">
+      <DiaryEditor />
+    </div>
+  );
 }
