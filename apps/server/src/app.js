@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // 静态文件（上传的照片和缩略图）
-app.use('/uploads', express.static(path.join(__dirname, '../../data/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../data/uploads')));
 
 // API 路由
 app.use('/api/records', recordsRouter);

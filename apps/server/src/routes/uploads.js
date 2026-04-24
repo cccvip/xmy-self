@@ -41,7 +41,7 @@ router.post('/photo', (req, res, next) => {
 
       const record = await prisma.record.create({
         data: {
-          type: 'photo',
+          type: 'PHOTO',
           recordDate: new Date(),
         },
       });

@@ -13,7 +13,7 @@ const asyncHandler = (fn) => (req, res, next) => {
 // GET /api/records - 获取记录列表
 router.get('/', asyncHandler(async (req, res) => {
   const { type } = req.query;
-  const where = type ? { type } : {};
+  const where = type ? { type: type.toUpperCase() } : {};
   const records = await prisma.record.findMany({
     where,
     orderBy: { recordDate: 'desc' },
