@@ -21,9 +21,12 @@ export const api = {
   createRecord: (data) => request('/api/records', { method: 'POST', body: JSON.stringify(data) }),
   updateRecord: (id, data) => request(`/api/records/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteRecord: (id) => request(`/api/records/${id}`, { method: 'DELETE' }),
-  uploadPhoto: (file) => {
+  uploadPhoto: (file, createdBy) => {
     const form = new FormData();
     form.append('photo', file);
+    if (createdBy) {
+      form.append('createdBy', createdBy);
+    }
     return fetch('/api/upload/photo', { method: 'POST', body: form }).then(r => r.json());
   },
 };
