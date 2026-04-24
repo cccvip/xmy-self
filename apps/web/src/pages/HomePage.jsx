@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRecordStore } from '../stores/recordStore';
 import PhotoCard from '../components/PhotoCard';
+import PhotoUploader from '../components/PhotoUploader';
 
 export default function HomePage() {
   const { records, loading, fetchRecords } = useRecordStore();
@@ -37,6 +38,7 @@ export default function HomePage() {
           <p>还没有记录，去上传第一张照片吧！</p>
         </div>
       )}
+      <PhotoUploader />
     </div>
   );
 }
