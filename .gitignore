@@ -9,3 +9,4 @@ data/uploads/*
 .env
 *.log
 dist/
+.claude/
