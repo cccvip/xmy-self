@@ -20,11 +20,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB
 
-router.post('/photo', upload.single('photo'), (req, res) => {
-  res.json({
-    success: true,
-    originalName: req.file.originalname,
-    filePath: req.file.path.replace(UPLOAD_DIR, '/uploads').replace(/\\/g, '/'),
+router.post('/photo', (req, res, next) => {
+  upload.single('photo')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ error: 'File too large (max 50MB)' });
+      }
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    res.json({
+      success: true,
+      originalName: req.file.originalname,
+      filePath: req.file.path.replace(UPLOAD_DIR, '/uploads').replace(/\\/g, '/'),
+    });
   });
 });
 
