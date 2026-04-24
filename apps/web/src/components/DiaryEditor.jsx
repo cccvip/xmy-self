@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRecordStore } from '../stores/recordStore';
 import { useUserStore } from '../stores/userStore';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +46,7 @@ export default function DiaryEditor() {
       setTitle('');
       setContent('');
       setCreatedBy('');
-      alert('日记保存成功！');
+      toast.success('日记保存成功！');
     } catch (err) {
       alert('保存失败: ' + err.message);
     } finally {

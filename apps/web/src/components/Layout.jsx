@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useUserStore } from '../stores/userStore';
+import { Toaster } from 'sonner';
 
 const PRESET_RELATIVES = ['爸爸', '妈妈', '爷爷', '奶奶', '外公', '外婆'];
 
@@ -66,6 +67,7 @@ export default function Layout() {
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-6">
         <Outlet />
       </main>
+      <Toaster position="top-center" />
     </div>
   );
 }
