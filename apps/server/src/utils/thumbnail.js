@@ -5,21 +5,42 @@ const fs = require('fs');
 const UPLOAD_DIR = path.resolve(__dirname, '../../data/uploads');
 
 async function generateThumbnail(originalPath, width = 400) {
-  const relativePath = originalPath.replace('/uploads/', '');
+  // originalPath is like /uploads/photos/2026/04/24/filename.jpg
+  const relativePath = originalPath.replace(/^\/uploads\//, '');
   const fullOriginal = path.join(UPLOAD_DIR, relativePath);
 
-  const dir = path.dirname(fullOriginal).replace(/[\\/]photos[\\/]/g, (match) => match.replace('photos', 'thumbs'));
-  fs.mkdirSync(dir, { recursive: true });
+  // Build thumb path: replace "photos" segment with "thumbs"
+  const pathParts = relativePath.split(/[\\/]/);
+  const photosIndex = pathParts.indexOf('photos');
+  if (photosIndex === -1) {
+    throw new Error('Invalid photo path: missing "photos" segment');
+  }
+  pathParts[photosIndex] = 'thumbs';
 
-  const filename = path.basename(fullOriginal, path.extname(fullOriginal)) + '-thumb.jpg';
-  const thumbPath = path.join(dir, filename);
+  const basename = path.basename(fullOriginal, path.extname(fullOriginal));
+  pathParts[pathParts.length - 1] = basename + '-thumb.jpg';
 
-  await sharp(fullOriginal)
-    .resize(width, null, { withoutEnlargement: true })
-    .jpeg({ quality: 80 })
-    .toFile(thumbPath);
+  const thumbRelative = path.join(...pathParts);
+  const thumbFullPath = path.join(UPLOAD_DIR, thumbRelative);
 
-  return '/uploads/' + path.relative(UPLOAD_DIR, thumbPath).replace(/\\/g, '/');
+  fs.mkdirSync(path.dirname(thumbFullPath), { recursive: true });
+
+  try {
+    await sharp(fullOriginal)
+      .resize(width, null, { withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toFile(thumbFullPath);
+  } catch (err) {
+    // Clean up partial file if it exists
+    try {
+      fs.unlinkSync(thumbFullPath);
+    } catch (_) {
+      // ignore cleanup error
+    }
+    throw new Error(`Thumbnail generation failed: ${err.message}`);
+  }
+
+  return '/uploads/' + thumbRelative.replace(/\\/g, '/');
 }
 
 module.exports = { generateThumbnail };
