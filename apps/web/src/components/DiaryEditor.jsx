@@ -1,15 +1,25 @@
 import { useState } from 'react';
 import { useRecordStore } from '../stores/recordStore';
+import RelativeSelector from './RelativeSelector';
 
 export default function DiaryEditor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
+  const [createdBy, setCreatedBy] = useState('');
+  const [createdByError, setCreatedByError] = useState('');
   const addRecord = useRecordStore((s) => s.addRecord);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setCreatedByError('');
+
     if (!content.trim()) return;
+    if (!createdBy.trim()) {
+      setCreatedByError('请选择上传者身份');
+      return;
+    }
+
     setSaving(true);
     try {
       await addRecord({
@@ -17,9 +27,11 @@ export default function DiaryEditor() {
         title: title.trim() || undefined,
         content: content.trim(),
         recordDate: new Date().toISOString(),
+        createdBy,
       });
       setTitle('');
       setContent('');
+      setCreatedBy('');
       alert('日记保存成功！');
     } catch (err) {
       alert('保存失败: ' + err.message);
@@ -41,6 +53,19 @@ export default function DiaryEditor() {
             placeholder="今天的主题..."
             className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           />
+        </div>
+        <div>
+          <RelativeSelector
+            value={createdBy}
+            onChange={(val) => {
+              setCreatedBy(val);
+              setCreatedByError('');
+            }}
+            label="记录者身份"
+          />
+          {createdByError && (
+            <p className="text-sm text-red-500">{createdByError}</p>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">内容</label>
