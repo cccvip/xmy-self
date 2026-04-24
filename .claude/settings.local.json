@@ -15,7 +15,16 @@
       "Bash(tasklist)",
       "Bash(npx vite:*)",
       "Bash(node:*)",
-      "Bash(convert -size 10x10 xc:red /tmp/test2.jpg)"
+      "Bash(convert -size 10x10 xc:red /tmp/test2.jpg)",
+      "Bash(npm start:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "Bash(cmd:*)",
+      "WebSearch",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:www.stow.build)"
     ]
   }
 }

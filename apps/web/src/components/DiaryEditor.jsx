@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { useRecordStore } from '../stores/recordStore';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import RelativeSelector from './RelativeSelector';
 
 export default function DiaryEditor() {
@@ -41,52 +46,51 @@ export default function DiaryEditor() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border p-6">
-      <h2 className="text-lg font-bold text-gray-800 mb-4">写日记</h2>
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">标题（可选）</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="今天的主题..."
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          />
-        </div>
-        <div>
-          <RelativeSelector
-            value={createdBy}
-            onChange={(val) => {
-              setCreatedBy(val);
-              setCreatedByError('');
-            }}
-            label="记录者身份"
-          />
-          {createdByError && (
-            <p className="text-sm text-red-500">{createdByError}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">内容</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="记录今天发生的趣事..."
-            rows={8}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
-          />
-        </div>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={saving || !content.trim()}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {saving ? '保存中...' : '保存日记'}
-          </button>
-        </div>
-      </div>
-    </form>
+    <Card>
+      <CardHeader>
+        <CardTitle>写日记</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label>标题（可选）</Label>
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="今天的主题..."
+            />
+          </div>
+          <div className="space-y-2">
+            <RelativeSelector
+              value={createdBy}
+              onChange={(val) => {
+                setCreatedBy(val);
+                setCreatedByError('');
+              }}
+              label="记录者身份"
+            />
+            {createdByError && (
+              <p className="text-sm text-destructive">{createdByError}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label>内容</Label>
+            <Textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="记录今天发生的趣事..."
+              rows={8}
+              className="resize-none"
+            />
+          </div>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={saving || !content.trim()}>
+              {saving ? '保存中...' : '保存日记'}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

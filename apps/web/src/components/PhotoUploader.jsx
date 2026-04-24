@@ -1,6 +1,14 @@
 import { useState, useRef } from 'react';
 import { api } from '../api/client';
 import { useRecordStore } from '../stores/recordStore';
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import RelativeSelector from './RelativeSelector';
 
 export default function PhotoUploader() {
@@ -39,6 +47,13 @@ export default function PhotoUploader() {
     }
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+    setPendingFile(null);
+    setCreatedBy('');
+    setCreatedByError('');
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <input
@@ -55,17 +70,21 @@ export default function PhotoUploader() {
           e.target.value = '';
         }}
       />
-      <button
+      <Button
+        size="icon"
+        className="w-14 h-14 rounded-full shadow-lg text-xl"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 active:scale-95 transition-all flex items-center justify-center text-2xl disabled:opacity-60"
       >
         {uploading ? '⏳' : '+'}
-      </button>
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 space-y-4">
-            <h3 className="text-lg font-bold text-gray-800">选择上传者身份</h3>
+      </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>选择上传者身份</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
             <RelativeSelector
               value={createdBy}
               onChange={(val) => {
@@ -75,31 +94,19 @@ export default function PhotoUploader() {
               label="上传者身份"
             />
             {createdByError && (
-              <p className="text-sm text-red-500">{createdByError}</p>
+              <p className="text-sm text-destructive">{createdByError}</p>
             )}
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setPendingFile(null);
-                  setCreatedBy('');
-                  setCreatedByError('');
-                }}
-                className="flex-1 px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                onClick={handleConfirmUpload}
-                disabled={uploading}
-                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50 transition-colors"
-              >
-                {uploading ? '上传中...' : '确认上传'}
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+          <DialogFooter>
+            <Button variant="outline" onClick={handleClose}>
+              取消
+            </Button>
+            <Button onClick={handleConfirmUpload} disabled={uploading}>
+              {uploading ? '上传中...' : '确认上传'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
