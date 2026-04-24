@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecordStore } from '../stores/recordStore';
+import { useUserStore } from '../stores/userStore';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +12,16 @@ export default function DiaryEditor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [saving, setSaving] = useState(false);
-  const [createdBy, setCreatedBy] = useState('');
+  const currentUser = useUserStore((s) => s.currentUser);
+  const [createdBy, setCreatedBy] = useState(currentUser);
   const [createdByError, setCreatedByError] = useState('');
   const addRecord = useRecordStore((s) => s.addRecord);
+
+  useEffect(() => {
+    if (currentUser && !createdBy) {
+      setCreatedBy(currentUser);
+    }
+  }, [currentUser]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
