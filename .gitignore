@@ -1,0 +1,11 @@
+node_modules/
+data/db/*
+!data/db/.gitkeep
+data/uploads/*
+!data/uploads/photos/
+!data/uploads/photos/.gitkeep
+!data/uploads/thumbs/
+!data/uploads/thumbs/.gitkeep
+.env
+*.log
+dist/
