@@ -39,10 +39,13 @@ router.post('/photo', (req, res, next) => {
       const filePath = req.file.path.replace(UPLOAD_DIR, '/uploads').replace(/\\/g, '/');
       const thumbPath = await generateThumbnail(filePath, 400);
 
+      const createdBy = req.body.createdBy || '爸爸';
+
       const record = await prisma.record.create({
         data: {
           type: 'PHOTO',
           recordDate: new Date(),
+          createdBy,
         },
       });
 
