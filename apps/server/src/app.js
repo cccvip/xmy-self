@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const os = require('os');
 const recordsRouter = require('./routes/records');
 const uploadsRouter = require('./routes/uploads');
 
@@ -20,6 +21,24 @@ app.use('/api/upload', uploadsRouter);
 // 健康检查
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
+});
+
+// 服务器信息
+app.get('/api/server-info', (req, res) => {
+  const interfaces = os.networkInterfaces();
+  const addresses = [];
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        addresses.push({ name, address: iface.address });
+      }
+    }
+  }
+  res.json({
+    port: PORT,
+    addresses,
+    localUrl: `http://${addresses[0]?.address || 'localhost'}:${PORT}`,
+  });
 });
 
 // 生产环境提供前端静态文件

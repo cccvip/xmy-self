@@ -1,4 +1,15 @@
+import { useEffect, useState } from 'react';
+
 export default function SettingsPage() {
+  const [serverInfo, setServerInfo] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/server-info')
+      .then(r => r.json())
+      .then(setServerInfo)
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <h2 className="text-xl font-bold text-gray-800">设置</h2>
@@ -34,6 +45,16 @@ export default function SettingsPage() {
           <li>通过虚拟 IP 访问本系统</li>
         </ol>
       </div>
+
+      {serverInfo && (
+        <div className="bg-white rounded-xl shadow-sm border p-6">
+          <h3 className="font-semibold text-gray-800 mb-3">访问地址</h3>
+          <p className="text-sm text-gray-600 mb-2">内网访问：</p>
+          <code className="block bg-gray-100 px-2 py-1 rounded text-sm mb-4">{serverInfo.localUrl}</code>
+          <p className="text-sm text-gray-600 mb-2">安装 Tailscale 后，远程访问地址：</p>
+          <code className="block bg-gray-100 px-2 py-1 rounded text-sm">http://&lt;服务器TailscaleIP&gt;:{serverInfo.port}</code>
+        </div>
+      )}
     </div>
   );
 }
