@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(sqlite3 ../../../data/db/baby.db \".tables\")",
+      "Bash(sqlite3 ../../../data/db/baby.db \".schema\")",
+      "Bash(node check-db.js)",
+      "Bash(npm run:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(taskkill /F /IM nodemon.exe)",
+      "Bash(tasklist)",
+      "Bash(npx vite:*)",
+      "Bash(node:*)",
+      "Bash(convert -size 10x10 xc:red /tmp/test2.jpg)"
+    ]
+  }
+}
